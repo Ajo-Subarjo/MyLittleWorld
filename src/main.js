@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Player } from './player.js';
 
 const canvas = document.querySelector('#canvas');
 const scene = new THREE.Scene();
@@ -11,19 +12,20 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0xFFFF)
 
 
-camera.position.set(0, 0, 30);
-camera.rotation.x = THREE.MathUtils.degToRad(35);
-
-
+const player = new Player();
 
 const plane = new THREE.Mesh(
-  new THREE.PlaneGeometry(64, 64),
-  new THREE.MeshBasicMaterial({color: 0x87ff72}));
+  new THREE.PlaneGeometry(128, 128),
+  new THREE.MeshBasicMaterial({color: 0x87ff72})
+);
 
-plane.position.set(0, 10, 0)
+
+plane.position.set(0, 0, 0)
 plane.rotation.x = THREE.MathUtils.degToRad(0)
-scene.add(plane);
+scene.add(player.mesh, plane);  
 
+player.mesh.position.z = 10
+const Timer = new THREE.Timer();
 
 
 
@@ -31,6 +33,15 @@ scene.add(plane);
 
 function animate() {
   requestAnimationFrame(animate);
-  renderer.render(scene, camera)
+  Timer.update();
+  const delta = Timer.getDelta();
+
+  const offset = new THREE.Vector3(0, -35, 50);
+  camera.position.copy(player.mesh.position).add(offset)
+  camera.lookAt(player.mesh.position);
+
+  player.update(delta);
+  renderer.render(scene, camera);
 }
 animate();
+
