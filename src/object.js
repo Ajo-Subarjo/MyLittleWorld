@@ -2,43 +2,38 @@ import * as THREE from 'three';
 
 
 
-
 export class Object {
-    constructor() {
-        this.walls = [];
+    constructor(scene, physics, ThreeGeo, ThreeMat, position) {
+        this.scene = scene
+        this.physics = physics
 
-        const leftWall = new THREE.Mesh(
-            new THREE.BoxGeometry(2,130,10),
-            new THREE.MeshBasicMaterial()
-        );
-
-        const rightWall = new THREE.Mesh(
-            new THREE.BoxGeometry(2,130,10),
-            new THREE.MeshBasicMaterial()
-        );
-
-        const frontWall = new THREE.Mesh(
-            new THREE.BoxGeometry(130,2,10),
-            new THREE.MeshBasicMaterial()
-        );
-
-        const backWall = new THREE.Mesh(
-            new THREE.BoxGeometry(130,2,10),
-            new THREE.MeshBasicMaterial()
+        this.mesh = new THREE.Mesh(
+            ThreeGeo,
+            ThreeMat
         );
         
+        const geometry = this.mesh.geometry.parameters;
 
-        leftWall.position.set(-65,0,5)
-        rightWall.position.set(65,0,5)
-        frontWall.position.set(0,65,5)
-        backWall.position.set(0,-65,5)
+        this.body = physics.world.createRigidBody(
+            physics.RAPIER.RigidBodyDesc.fixed().setTranslation(
+                position.x,
+                position.y,
+                position.z
+            )
+        );
 
-        leftWall.name = 'leftWall'
-        rightWall.name = 'rightWall'
-        frontWall.name = 'frontWall'
-        backWall.name = 'backWall'
-
-
-        this.walls.push(leftWall, rightWall, frontWall, backWall)
+        physics.world.createCollider(
+            physics.RAPIER.ColliderDesc.cuboid(
+                geometry.width/2,
+                geometry.height/2,
+                geometry.depth/2    
+            ),
+            this.body
+        );
+        
+        this.mesh.position.copy(position);
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
+        scene.add(this.mesh);
     }
 }

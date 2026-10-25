@@ -1,68 +1,124 @@
 import * as THREE from 'three';
+import { pass } from 'three/tsl';
+import { dof } from 'three/addons/tsl/display/DepthOfFieldNode.js';
+
+
+
+
 import { Player } from './player.js';
-import { Collider } from './collider.js';
 import { Object } from './object.js'
+import { Physics } from './physics.js';
+import { PhysicsDebug } from './debug.js';
 
 
-const canvas = document.querySelector('#canvas');
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+async function Main() {
+  const canvas = document.querySelector('#canvas');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
+  // const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+
+  const sun = new THREE.DirectionalLight(0xffffff, 1);
+  sun.position.set(10,20,10);
+  scene.add(sun)
 
 
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0xFFFF);
+  scene.fog = new THREE.FogExp2(0x3b414d, 0.013);  
+
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x888888);
 
 
-const object = new Object();
-const walls = object.walls;
+  const physics = await Physics.create();
+  const player = new Player(scene, physics);
 
-const collider = new Collider(walls);
+  createObject()
 
+  const debug = new PhysicsDebug(scene,physics);
 
-const player = new Player();
-
-
-const plane = new THREE.Mesh(
-  new THREE.PlaneGeometry(128, 128),
-  new THREE.MeshBasicMaterial({color: 0x87ff72}));
-
-plane.position.set(0, 0, 0)
-plane.rotation.x = THREE.MathUtils.degToRad(0)
-
-
-
-scene.add(player.mesh, plane);  
-// scene.add(player.arrowHelper  )
-scene.add(...walls)
-
-
-player.mesh.position.z = 10
-const Timer = new THREE.Timer();
+  const Timer = new THREE.Timer();
 
 
 
 
+  function animate() {
+    requestAnimationFrame(animate);
 
-function animate() {
-  requestAnimationFrame(animate);
-  Timer.update();
-  const delta = Timer.getDelta();
+    Timer.update();
+    const delta = Timer.getDelta();
 
-  const offset = new THREE.Vector3(0, -35, 50);
-  camera.position.copy(player.mesh.position).add(offset)
-  camera.lookAt(player.mesh.position);
+    physics.update();
+    player.update(delta);
+    debug.update();
 
-  player.update(delta);
-  
-  const hits = collider.check(player);
-  for (const hit of hits) {
-    console.log('hit', hit.name)
+    const offset = new THREE.Vector3(0, 60, 50);
+    camera.position.copy(player.mesh.position).add(offset)
+    camera.lookAt(player.mesh.position);
+
+    renderer.render(scene, camera);
   }
 
-  renderer.render(scene, camera);
+  animate();
+
+
+  function createObject() {
+    const wallRight = new Object(
+      scene,
+      physics,
+      new THREE.BoxGeometry(5,10,200),
+      new THREE.MeshStandardMaterial({color: 0x888888}),
+      new THREE.Vector3(100,0,0)
+    );
+    const wallLeft = new Object(
+      scene,
+      physics,
+      new THREE.BoxGeometry(5,10,200),
+      new THREE.MeshStandardMaterial({color: 0x888888}),
+      new THREE.Vector3(-100,0,0)
+    );
+    const wallBack = new Object(
+      scene,
+      physics,
+      new THREE.BoxGeometry(200,10,5),
+      new THREE.MeshStandardMaterial({color: 0x888888}),
+      new THREE.Vector3(0,0,100)
+    );
+    const wallFront = new Object(
+      scene,
+      physics,
+      new THREE.BoxGeometry(200,10,5),
+      new THREE.MeshStandardMaterial({color: 0x888888}),
+      new THREE.Vector3(0,0,-100)
+    );
+    const floor = new Object(
+      scene,
+      physics,
+      new THREE.BoxGeometry(200,10,200),
+      new THREE.MeshStandardMaterial({color: 0x888888, roughness: 1}),
+      new THREE.Vector3(0,-10,0)
+    );
+    
+
+    const interactables1 = new Object(
+      scene,
+      physics,
+      new THREE.BoxGeometry(10,10,10),
+      new THREE.MeshStandardMaterial({color: 0x8888FF}),
+      new THREE.Vector3(0,0,0)
+    )
+
+
+
+
+  }
 }
 
-animate();
+
+
+Main();
+
+
+
 
