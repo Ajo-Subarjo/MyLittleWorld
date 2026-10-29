@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { setProject } from './project_screen.jsx' 
+import get_texture from './get_texture.js';
 
 
 export class Player {
@@ -7,20 +9,46 @@ export class Player {
         this.physics = physics;
         this.RAPIER = physics.RAPIER;
 
+        this.texture = get_texture('/assets/character_spritesheet_leveled_with_lamp.png');
+
+        this.cols = 3;
+        this.rows = 2;
+
+        this.frameCurrent = 0;
+        this.frameTotal = 5;
+
+        this.frameTime = 0.2;
+        this.elapsedTime = 0;
+
+        this.texture.wrapS = THREE.RepeatWrapping
+        this.texture.wrapT = THREE.RepeatWrapping   
+        this.texture.repeat.set(
+            1 / this.cols,
+            1 / this.rows
+        );
+
+        this.screen = false
+
         this.mesh = new THREE.Mesh(
             new THREE.PlaneGeometry(10,20),
-            new THREE.MeshStandardMaterial({color: 0xFF0000})
+            new THREE.MeshToonMaterial({
+                map: this.texture,
+                transparent: true, 
+                color: 0xe8fffb,
+                side: THREE.DoubleSide               
+            })
         );
+
+        
         this.mesh.position.z = 10;
-        // this.mesh.castShadow = true;
+        // this.mesh.castShadow = true
         this.mesh.receiveShadow = true;
         this.scene.add(this.mesh);
 
-        const light = new THREE.PointLight(0xf7a545, 650,20, 1)
-        light.position.set(0,2,2)
+        const light = new THREE.PointLight(0xffc871, 150, 18, 0.8)
+        light.position.set(4,2,0)
         light.castShadow = true
-        light.shadow.mapSize.set(1024, 1024)
-
+        light.shadow.mapSize.set(512, 512)
         this.mesh.add(light);
 
 
@@ -28,28 +56,26 @@ export class Player {
             this.RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(0,0,10)
         );
 
-        const q = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(1, 0, 0), // Z axis -> capsule lies along X
-            Math.PI / 2
-        );
-
         this.collider = this.physics.world.createCollider(
-            this.RAPIER.ColliderDesc.capsule(5,5),
+            this.RAPIER.ColliderDesc.capsule(5,3),
             this.body
         );
 
 
+        this.closestObject= ""    
+
+
         this.controller = this.physics.world.createCharacterController(0.01);
         this.controller.setSlideEnabled(true);  
-        
         this.verticalVelocity = 0;
 
-        this.speed = 100
+        this.speed = 50
         this.keys = {
             KeyW: false,
             KeyS: false,
             KeyA: false,
-            KeyD: false
+            KeyD: false,
+            KeyE: false,
         };
         window.addEventListener('keydown', (e) => {
             this.keys[e.code] = true;
@@ -57,7 +83,45 @@ export class Player {
         window.addEventListener('keyup', (e) => {
             this.keys[e.code] = false;
         });
+
+        this.frameUpdate(0);
     };
+
+    frameUpdate(frame) {
+        const col = frame % this.cols;
+        const row = frame % this.rows;
+
+        this.texture.offset.x = col / this.cols;
+        this.texture.offset.y = 1 - (row + 1) / this.rows;
+    };
+
+    animationUpdate(movement ,delta) {
+        // console.log(movement.length())
+        this.elapsedTime += delta
+
+        if (movement.length() > 0.1){
+            if (this.elapsedTime >= this.frameTime) {
+                this.elapsedTime = 0;
+
+                this.frameCurrent = (this.frameCurrent + 1) % this.frameTotal;
+                this.frameUpdate(this.frameCurrent)
+            };
+        };
+    };
+
+
+    checkOrientatio(movement) {
+        // console.log(movement);
+        if (movement > 0) {
+            this.mesh.rotation.y = 0
+            // console.log(Math.PI)
+        } else if (movement < 0) {
+            this.mesh.rotation.y = Math.PI   
+            // console.log(-Math.PI)     
+        };
+    };
+
+
 
     update(delta) {
         const movement = new THREE.Vector3(
@@ -66,7 +130,7 @@ export class Player {
             Number(this.keys.KeyS) - Number(this.keys.KeyW)
         );
 
-        this.verticalVelocity += -9.18 * delta;
+        // this.verticalVelocity += -9.18 * delta;
 
         if (movement.lengthSq() > 0) {
             movement.normalize();
@@ -74,7 +138,7 @@ export class Player {
         
         movement.multiplyScalar(this.speed * delta);
 
-        movement.y = this.verticalVelocity * delta
+        // movement.y = this.verticalVelocity * delta
 
 
         this.controller.computeColliderMovement(
@@ -85,6 +149,9 @@ export class Player {
                 z: movement.z
             }
         );
+
+        this.checkOrientatio(movement.x);
+        this.animationUpdate(movement ,delta);
 
         const correctedMovement = this.controller.computedMovement();
         const currentPosition = this.body.translation();
@@ -101,6 +168,25 @@ export class Player {
             position.y,
             position.z
         );
+
+
+        if (this.keys.KeyE) {
+            console.log(this.closestObject)
+            if (!this.screen) {
+                if (this.closestObject) {
+                    this.screen = true
+                    setProject(this.closestObject)
+                    this.keys.KeyE = false
+                }
+            } else {
+                if (this.closestObject) {
+                    setProject(null)
+                    this.keys.KeyE = false
+                    this.screen = false
+                }
+            }
+                   
+        }
     }
 }
 

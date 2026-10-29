@@ -1,0 +1,37 @@
+import { createSignal, Show } from "solid-js";
+import projects from './project.json'
+
+export const [project, setProject] = createSignal(null);
+
+export default function ProjectScreen() {
+    return (
+        <Show when={project()} >
+            {(name) => (
+                <div className="project-ui">
+                    <button className="close-button" onClick={() => setProject(null)}>
+                        [ X ]
+                    </button>
+                    <div className="banner-container">
+                        <img
+                        src={projects[name()].image}
+                        alt={projects[name()].title}
+                        class="project-banner"
+                        />
+                    </div>
+                    <h2 className="title">{projects[name()].title}</h2>
+                    <p className="description">{projects[name()].description}</p>
+                    <div className="button-container">
+                        <button className="source-button" onClick={() => window.open(projects[name()].sourcelink, '_blank', 'noopener,noreferrer')}>
+                            {console.log(projects[name()].link)}
+                            {projects[name()].buttonText ?? 'source Project'}
+                        </button>
+                        <button className="visit-button" onClick={() => window.open(projects[name()].demolink, '_blank', 'noopener,noreferrer')}>
+                            {console.log(projects[name()].link)}
+                            {projects[name()].buttonText ?? 'visit Project'}
+                        </button>
+                    </div>
+                </div>
+            )}
+        </Show>
+    );
+}
