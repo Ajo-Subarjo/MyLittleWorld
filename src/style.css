@@ -40,7 +40,8 @@ html, body {
 
     box-sizing: border-box;
 
-    background-color: #fff;
+    background-color: #fffae7;
+
     /* border-radius: 16px; */
 }
 
@@ -89,7 +90,7 @@ html, body {
     font-style: normal;
     margin-top: 12px;
     margin-bottom: 6px;
-    border-bottom: 2px dashed #9ca3af;
+    border-bottom: 2px dash ed #9ca3af;
 }
 
 
@@ -124,6 +125,7 @@ html, body {
     font-size: 1.6cap;
     font-weight: 600;
     font-style: normal;
+    background: #f4f4f4;
 }
 
 .button-container button:hover {

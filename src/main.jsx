@@ -11,6 +11,7 @@ import { Physics } from './physics.js';
 import { PhysicsDebug } from './debug.js';
 import get_texture from './get_texture.js';
 
+import { AudioManager } from './audio.js';
 
 
 
@@ -23,10 +24,19 @@ async function Main() {
   const renderer = new THREE.WebGPURenderer({ canvas, antialias: true});
   await renderer.init();
 
+
+  const audiolistener = new THREE.AudioListener()
+  camera.add(audiolistener)
+
+  const audiomanager = new AudioManager(audiolistener);
+
+
   render(
-    () => <ProjectScreen />,
+    () => <ProjectScreen audiomanager={audiomanager}/>,
     document.getElementById('root')
   )
+
+
 
 
   let Interact = []
@@ -62,11 +72,11 @@ async function Main() {
   //   0.0 
   // );
 
-
+  
 
 
   const physics = await Physics.create();
-  const player = new Player(scene, physics);
+  const player = new Player(scene,physics,audiomanager);
 
   createObject()
 
@@ -206,7 +216,7 @@ async function Main() {
       scene,
       physics,
       new THREE.PlaneGeometry(15,15),
-      new THREE.Vector3(-20,0,-35),
+      new THREE.Vector3(-30,0,-45),
     )
 
     const cosmotrack = new InteractAbleObject(
@@ -214,7 +224,7 @@ async function Main() {
       scene,
       physics,
       new THREE.PlaneGeometry(15,15),
-      new THREE.Vector3(25,0,50),
+      new THREE.Vector3(25,0,40),
     )
 
     const wrebos = new InteractAbleObject(
@@ -222,7 +232,7 @@ async function Main() {
       scene,
       physics,
       new THREE.PlaneGeometry(15,15),
-      new THREE.Vector3(5,0,-45),
+      new THREE.Vector3(5,0,-80),
     )
 
     const rx_pad = new InteractAbleObject(
@@ -367,7 +377,7 @@ async function Main() {
         depthWrite: true,
         alphaTest: 0.1,
       }),
-      new THREE.Vector3(-20,-3.0,-40),
+      new THREE.Vector3(-27,-3.0,-37),
       new THREE.Vector3(-0.6,0,0),
       true,
       false

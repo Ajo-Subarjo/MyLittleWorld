@@ -103,7 +103,7 @@ export class InteractAbleObject {
 
         
 
-        this.radius = 20;
+        this.radius = 10;
         this.center = this.mesh.position;
 
 

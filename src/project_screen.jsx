@@ -3,12 +3,18 @@ import projects from './project.json'
 
 export const [project, setProject] = createSignal(null);
 
-export default function ProjectScreen() {
+export default function ProjectScreen(props) {
+    function playsound() {
+        props.audiomanager.playUI()
+    } 
     return (
         <Show when={project()} >
             {(name) => (
                 <div className="project-ui">
-                    <button className="close-button" onClick={() => setProject(null)}>
+                    <button className="close-button" onClick={() => {
+                        playsound()
+                        setProject(null)
+                        }}>
                         [ X ]
                     </button>
                     <div className="banner-container">
@@ -21,11 +27,15 @@ export default function ProjectScreen() {
                     <h2 className="title">{projects[name()].title}</h2>
                     <p className="description">{projects[name()].description}</p>
                     <div className="button-container">
-                        <button className="source-button" onClick={() => window.open(projects[name()].sourcelink, '_blank', 'noopener,noreferrer')}>
+                        <button className="source-button" onClick={() => {
+                            playsound()
+                            window.open(projects[name()].sourcelink, '_blank', 'noopener,noreferrer')
+                            }}>
                             {console.log(projects[name()].link)}
                             {projects[name()].buttonTextSource ?? 'source Project'}
                         </button>
                         <button className="visit-button" disabled={!projects[name()].demolink} onClick={() => {
+                            playsound()
                             if (name() == 'OneBonker') {
                                 fetch('/onebonkeruri.txt')
                                 .then(res => res.text())

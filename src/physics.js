@@ -19,4 +19,4 @@ export class Physics {
     update() {
         this.world.step();
     };
-}
+}   

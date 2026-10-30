@@ -4,12 +4,19 @@ import get_texture from './get_texture.js';
 
 
 export class Player {
-    constructor(scene, physics) {
+    constructor(scene, physics,audiomanager) {
         this.scene = scene;
         this.physics = physics;
         this.RAPIER = physics.RAPIER;
+        
+        this.audiomanager = audiomanager
 
         this.texture = get_texture('/assets/character_spritesheet_leveled_with_lamp.png');
+
+ 
+        this.footstep_interval = 0.5;
+        this.footstep_timer = 0.0;
+
 
         this.cols = 3;
         this.rows = 2;
@@ -71,7 +78,7 @@ export class Player {
         this.controller.setSlideEnabled(true);  
         this.verticalVelocity = 0;
 
-        this.speed = 50
+        this.speed = 30;
         this.keys = {
             KeyW: false,
             KeyS: false,
@@ -99,16 +106,17 @@ export class Player {
 
     animationUpdate(movement ,delta) {
         // console.log(movement.length())
-        this.elapsedTime += delta
+        const isMoving = movement.x ** 2 + movement.z ** 2 > 0.0001;
+        if (isMoving) {
+            this.elapsedTime += delta
 
-        if (movement.length() > 0.1){
             if (this.elapsedTime >= this.frameTime) {
                 this.elapsedTime = 0;
 
                 this.frameCurrent = (this.frameCurrent + 1) % this.frameTotal;
                 this.frameUpdate(this.frameCurrent)
             };
-        };
+        }
     };
 
 
@@ -123,6 +131,18 @@ export class Player {
         };
     };
 
+    updateFootstepSound(movement ,delta) {  
+        const isMoving = movement.x ** 2 + movement.z ** 2 > 0.0001;
+        if (isMoving) {
+            this.footstep_timer -= delta
+            if (this.footstep_timer <= 0) {
+                this.audiomanager.playFootstep()
+                this.footstep_timer = this.footstep_interval                
+            } else {
+                this.footstep_timer = 0
+            }
+        }
+    };
 
 
     update(delta) {
@@ -152,11 +172,13 @@ export class Player {
             }
         );
 
-        this.checkOrientatio(movement.x);
-        this.animationUpdate(movement ,delta);
+        
 
         const correctedMovement = this.controller.computedMovement();
         const currentPosition = this.body.translation();
+
+    
+        this.checkOrientatio(movement.x);
 
         this.body.setNextKinematicTranslation({
             x: currentPosition.x + correctedMovement.x,
@@ -171,6 +193,9 @@ export class Player {
             position.z
         );
 
+        this.animationUpdate(correctedMovement ,delta);
+        this.updateFootstepSound(correctedMovement ,delta);
+
 
         if (this.keys.KeyE) {
             console.log(this.closestObject)
@@ -178,6 +203,7 @@ export class Player {
                 if (this.closestObject) {
                     this.screen = true
 
+                    this.audiomanager.playUI()
                     if (this.closestObject == 'OneBonker'){
                         setProject(this.closestObject)
                     } else {
@@ -188,6 +214,7 @@ export class Player {
             } else {
                 if (this.closestObject) {
                     setProject(null)
+                    this.audiomanager.playUI()
                     this.keys.KeyE = false
                     this.screen = false
                 }
