@@ -1,12 +1,9 @@
 import * as THREE from 'three'
-import { manager } from './loadingmanager';
-
-const loader = new THREE.TextureLoader(manager)
 
 export default function get_texture(path, isSprite = false, frame = 0) {
-
+    const texture = new THREE.TextureLoader().load(path);
     if (isSprite) {
-        const texture = loader.load(path);
+        
         texture.wrapS = THREE.RepeatWrapping
         texture.wrapT = THREE.RepeatWrapping
 
@@ -24,6 +21,6 @@ export default function get_texture(path, isSprite = false, frame = 0) {
         return texture
 
     } else {
-        return new THREE.TextureLoader().load(path);
+        return texture;
     }
 }

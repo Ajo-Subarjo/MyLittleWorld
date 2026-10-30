@@ -12,14 +12,14 @@ export class AudioManager {
 
 
         this.audioloader.load(
-            '/assets/sfx/footstep1.ogg',
+            'assets/sfx/footstep1.ogg',
              (buffer) => {
                 this.footstep_sound.setBuffer(buffer);
                 this.footstep_sound.setVolume(0.4);
             }
         );
         this.audioloader.load(
-            '/assets/sfx/footstep2.ogg',
+            'assets/sfx/footstep2.ogg',
             (buffer) => {
                 this.footstep_soundb.setBuffer(buffer);
                 this.footstep_soundb.setVolume(0.4);
@@ -27,7 +27,7 @@ export class AudioManager {
         )
     
         this.audioloader.load(
-            '/assets/sfx/JDSherbert - Nostalgia Music Pack - Disney Films.ogg',
+            'assets/sfx/JDSherbert - Nostalgia Music Pack - Disney Films.ogg',
              (buffer) => {
                 this.bgm_sound.setBuffer(buffer);
                 this.bgm_sound.setLoop(true);
@@ -37,7 +37,7 @@ export class AudioManager {
         );
 
         this.audioloader.load(
-            '/assets/sfx/cozy_fx_27.ogg',
+            'assets/sfx/cozy_fx_27.ogg',
              (buffer) => {
                 this.ui_sound.setBuffer(buffer);
                 this.ui_sound.setVolume(0.8);

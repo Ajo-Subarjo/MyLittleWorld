@@ -79,7 +79,7 @@ export class InteractAbleObject {
         this.defaultPos = position
 
 
-        this.texture = get_texture('/assets/ornament_leveled_light.png', true, 0)
+        this.texture = get_texture('assets/ornament_leveled_light.png', true, 0)
         this.mesh = new THREE.Mesh(
             threeGeo,
             new THREE.MeshStandardMaterial({
@@ -90,7 +90,7 @@ export class InteractAbleObject {
             })
         );
 
-        this.labelTexture = get_texture('/assets/ornament_leveled_light.png', true, 1)
+        this.labelTexture = get_texture('assets/ornament_leveled_light.png', true, 1)
         this.label = new THREE.Mesh(
             new THREE.PlaneGeometry(10,8),
             new THREE.MeshBasicMaterial({

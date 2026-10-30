@@ -11,7 +11,7 @@ export class Player {
         
         this.audiomanager = audiomanager
 
-        this.texture = get_texture('/assets/character_spritesheet_leveled_with_lamp.png');
+        this.texture = get_texture('assets/character_spritesheet_leveled_with_lamp.png');
 
  
         this.footstep_interval = 0.5;

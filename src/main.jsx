@@ -2,6 +2,7 @@ import * as THREE from 'three/webgpu';
 import { array, pass, vec3 } from 'three/tsl';
 // import { dof } from 'three/addons/tsl/display/DepthOfFieldNode.js';
 
+
 import { render } from 'solid-js/web';
 import ProjectScreen from './project_screen.jsx';
 
@@ -10,9 +11,8 @@ import { StaticObject, InteractAbleObject } from './object.js'
 import { Physics } from './physics.js';
 import { PhysicsDebug } from './debug.js';
 import get_texture from './get_texture.js';
-
+import { assetsReady, hideLoadingScreen, showError } from './loadingmanager.js';
 import { AudioManager } from './audio.js';
-
 
 
 async function Main() {
@@ -84,7 +84,6 @@ async function Main() {
   const Timer = new THREE.Timer();
 
 
-
   function animate() {
     requestAnimationFrame(animate);
 
@@ -102,16 +101,10 @@ async function Main() {
     Interact.forEach(i => {
       i.update(player, delta)
     });
-
-
-    // renderer.render(scene, camera);
     renderPipeline.render();
 
   }
-  animate();
-
-  
-
+  animate()
 
 
   function createObject() {
@@ -156,7 +149,7 @@ async function Main() {
 
 
 
-    const ground_texture = new THREE.TextureLoader().load('/assets/ground.png');
+    const ground_texture = get_texture('assets/ground.png');
     const ground = new StaticObject(
       scene,
       physics,
@@ -178,7 +171,7 @@ async function Main() {
       new THREE.Vector3(0,-10,32)
     );
 
-    const lake_texture = get_texture('/assets/lake.png')
+    const lake_texture = get_texture('assets/lake.png')
     const lake = new StaticObject(
       scene,
       physics,
@@ -250,9 +243,9 @@ async function Main() {
 
 
   function grassandrock() {
-    const grass_texture = get_texture('/assets/ornament_leveled_light.png', true, 2);
-    const grassb_texture = get_texture('/assets/ornament_leveled_light.png', true, 3);
-    const smallrock_texture = get_texture('/assets/ornament_leveled_light.png', true, 5);
+    const grass_texture = get_texture('assets/ornament_leveled_light.png', true, 2);
+    const grassb_texture = get_texture('assets/ornament_leveled_light.png', true, 3);
+    const smallrock_texture = get_texture('assets/ornament_leveled_light.png', true, 5);
 
     const rock = new StaticObject(
       scene,
@@ -401,7 +394,7 @@ async function Main() {
   }
 
   function ornament() {
-    const sign_texture = get_texture('/assets/ornament_leveled_2.png', true, 3);
+    const sign_texture = get_texture('assets/ornament_leveled_2.png', true, 3);
     const sign = new StaticObject(
       scene,
       physics,
@@ -418,7 +411,7 @@ async function Main() {
       false
     );
 
-    const house_texture = get_texture('/assets/ornament_leveled_2.png', true, 1);
+    const house_texture = get_texture('assets/ornament_leveled_2.png', true, 1);
     const house = new StaticObject(
       scene,
       physics,
@@ -435,7 +428,7 @@ async function Main() {
       false
     );
 
-    const log_texture = get_texture('/assets/ornament_leveled_light.png', true, 4);
+    const log_texture = get_texture('assets/ornament_leveled_light.png', true, 4);
     const log = new StaticObject(
       scene,
       physics,
@@ -470,7 +463,7 @@ async function Main() {
   }
 
   function bush() {
-    const bush_texture = get_texture('/assets/ornament_leveled_2.png', true, 0);
+    const bush_texture = get_texture('assets/ornament_leveled_2.png', true, 0);
     const bush = new StaticObject(
       scene,
       physics,
@@ -553,7 +546,7 @@ async function Main() {
   }
 
   function rock() {
-    const rock_texture = get_texture('/assets/ornament_leveled_2.png', true, 2);
+    const rock_texture = get_texture('assets/ornament_leveled_2.png', true, 2);
     const rock = new StaticObject(
       scene,
       physics,
@@ -603,7 +596,7 @@ async function Main() {
     );
 
 
-    const bigrock_texture = get_texture('/assets/bigrock.png');
+    const bigrock_texture = get_texture('assets/bigrock.png');
     const bigrock = new StaticObject(
       scene,
       physics,
@@ -623,7 +616,7 @@ async function Main() {
 
   function tree() {
 
-    const treeB_texture = get_texture('/assets/ornament_leveled_2.png', true, 4);
+    const treeB_texture = get_texture('assets/ornament_leveled_2.png', true, 4);
     const treeB = new StaticObject(
       scene,
       physics,
@@ -675,7 +668,7 @@ async function Main() {
 
 
 
-    const tree_texture = get_texture('/assets/tree.png');
+    const tree_texture = get_texture('assets/tree.png');
     const treeR1 = new StaticObject(
       scene,
       physics,

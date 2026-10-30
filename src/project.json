@@ -1,35 +1,35 @@
 {
   "Serene": {
     "title": "Serene",
-    "image": "/assets/banner/serene.png",
+    "image": "assets/banner/serene.png",
     "description": "Serene is simple and cozy personal homepage designed to provide a calm starting point for browsing the web. it combines a minimal search interface with real-time information such as the current time, date, weather, and a 7-day forecast, all wrapped in a playful parallax environment.",
     "sourcelink": "https://github.com/Ajo-Subarjo/serene",
     "demolink":"https://ajo-subarjo.github.io/serene/"
     },
   "Wreb-os": {
     "title": "WrebOS",
-    "image": "/assets/banner/wrebos.png",
+    "image": "assets/banner/wrebos.png",
     "description": "browser-based web operating system interface designed to mimic the look and feel of a desktop operating system. It provides a desktop, taskbar, windows, and apps that run directly in the browser",
     "sourcelink": "https://github.com/Ajo-Subarjo/WrebOS",
     "demolink":"https://ajo-subarjo.github.io/WrebOS/"
     },
   "Rx-pad": {
     "title": "Rx-pad",
-    "image": "/assets/banner/rx-pad.jpg",
+    "image": "assets/banner/rx-pad.jpg",
     "description": "A custom 3×3 macropad built with a seed xiao rp2040 and KMK firmware. The macropad includes media controls, and soon will adding blender shortcut layer, a rotary encoder for volume control, an OLED display, and RGB LEDs.",
     "sourcelink": "https://github.com/Ajo-Subarjo/RX-pad",
     "demolink":""
     },  
   "CosmoTrack": {
     "title": "CosmoTrack",
-    "image": "/assets/banner/cosmotrack.png",
+    "image": "assets/banner/cosmotrack.png",
     "description": "CosmoTrack is slack bot that use nasa and iss public api to get information about nasa apod and iss current position and pass that to slack chanel",
     "sourcelink": "https://github.com/Ajo-Subarjo/CosmoTrack",
     "demolink":""
     },
   "OneBonker": {
     "title": "OneBonker",
-    "image": "/assets/banner/onebonker.png",
+    "image": "assets/banner/onebonker.png",
     "description": "A a 2d whack a mole game with sound effect only in one line.U can click the button to copy the line and paste in browser",
     "sourcelink": "https://github.com/Ajo-Subarjo/OneBonker",
     "demolink":"/",
