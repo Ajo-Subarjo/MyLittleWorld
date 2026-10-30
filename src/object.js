@@ -4,7 +4,7 @@ import get_texture from './get_texture.js';
 
 
 export class StaticObject {
-    constructor(scene, physics, ThreeGeo, ThreeMat, position, castShadow = true) {
+    constructor(scene, physics, ThreeGeo, ThreeMat, position, rotation = new THREE.Vector3(0,0,0), castShadow = true, collide = true) {
         this.scene = scene
         this.physics = physics
 
@@ -23,15 +23,43 @@ export class StaticObject {
             )
         );
 
-        physics.world.createCollider(
-            physics.RAPIER.ColliderDesc.cuboid(
-                geometry.width/2,
-                geometry.height/2,
-                geometry.depth/2    
-            ),
-            this.body
+        if (collide) {
+            if (ThreeGeo instanceof THREE.PlaneGeometry) {
+                physics.world.createCollider(
+                    physics.RAPIER.ColliderDesc.cuboid(
+                        geometry.width/2,
+                        geometry.height/2,
+                        geometry.width/12,
+                    ),
+                    this.body
+                );
+            } else {
+                physics.world.createCollider(
+                    physics.RAPIER.ColliderDesc.cuboid(
+                        geometry.width/2,
+                        geometry.height/2,
+                        geometry.depth/2    
+                    ),
+                    this.body
+                );
+            }
+        };
+
+        const quaternion = new THREE.Quaternion().setFromEuler(
+            new THREE.Euler(
+                rotation.x,
+                rotation.y,
+                rotation.z
+            )
         );
-        
+
+        this.mesh.rotation.setFromVector3(rotation);
+        this.body.setRotation({
+            x: quaternion.x,
+            y: quaternion.y,
+            z: quaternion.z,
+            w: quaternion.w
+        })
         this.mesh.position.copy(position);
         this.mesh.castShadow = castShadow;
         this.mesh.receiveShadow = castShadow;
@@ -57,8 +85,8 @@ export class InteractAbleObject {
             new THREE.MeshStandardMaterial({
                 map: this.texture,
                 transparent: true,
-                depthWrite: false,
-                alphaTest: 0.1
+                depthWrite: true,
+                alphaTest: 0.8
             })
         );
 
@@ -68,8 +96,8 @@ export class InteractAbleObject {
             new THREE.MeshBasicMaterial({
                 map: this.labelTexture,
                 transparent: true, 
-                depthWrite: false,
-                alphaTest: 0.1
+                depthWrite: true,
+                alphaTest: 0.8
             })
         );
 

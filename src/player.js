@@ -35,25 +35,27 @@ export class Player {
                 map: this.texture,
                 transparent: true, 
                 color: 0xe8fffb,
-                side: THREE.DoubleSide               
+                side: THREE.DoubleSide,
+                // depthWrite: true,
+                alphaTest: 0.1
             })
         );
 
         
-        this.mesh.position.z = 10;
-        // this.mesh.castShadow = true
-        this.mesh.receiveShadow = true;
+        // this.mesh.position.z = 1000;
+        this.mesh.castShadow = false;
+        this.mesh.receiveShadow = false;
         this.scene.add(this.mesh);
 
         const light = new THREE.PointLight(0xffc871, 150, 18, 0.8)
-        light.position.set(4,2,0)
+        light.position.set(4,0,0)
         light.castShadow = true
         light.shadow.mapSize.set(512, 512)
         this.mesh.add(light);
 
 
         this.body = this.physics.world.createRigidBody(
-            this.RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(0,0,10)
+            this.RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(0,0,90)
         );
 
         this.collider = this.physics.world.createCollider(
@@ -74,7 +76,7 @@ export class Player {
             KeyW: false,
             KeyS: false,
             KeyA: false,
-            KeyD: false,
+            KeyD: false,    
             KeyE: false,
         };
         window.addEventListener('keydown', (e) => {
@@ -175,7 +177,12 @@ export class Player {
             if (!this.screen) {
                 if (this.closestObject) {
                     this.screen = true
-                    setProject(this.closestObject)
+
+                    if (this.closestObject == 'OneBonker'){
+                        setProject(this.closestObject)
+                    } else {
+                        setProject(this.closestObject)
+                    }
                     this.keys.KeyE = false
                 }
             } else {

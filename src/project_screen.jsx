@@ -23,9 +23,17 @@ export default function ProjectScreen() {
                     <div className="button-container">
                         <button className="source-button" onClick={() => window.open(projects[name()].sourcelink, '_blank', 'noopener,noreferrer')}>
                             {console.log(projects[name()].link)}
-                            {projects[name()].buttonText ?? 'source Project'}
+                            {projects[name()].buttonTextSource ?? 'source Project'}
                         </button>
-                        <button className="visit-button" onClick={() => window.open(projects[name()].demolink, '_blank', 'noopener,noreferrer')}>
+                        <button className="visit-button" disabled={!projects[name()].demolink} onClick={() => {
+                            if (name() == 'OneBonker') {
+                                fetch('/onebonkeruri.txt')
+                                .then(res => res.text())
+                                .then(text => navigator.clipboard.writeText(text))
+                                alert("You copied the Uri now paster in the browser address")
+                            } else {
+                                window.open(projects[name()].demolink, '_blank', 'noopener,noreferrer')
+                            }}}>
                             {console.log(projects[name()].link)}
                             {projects[name()].buttonText ?? 'visit Project'}
                         </button>
