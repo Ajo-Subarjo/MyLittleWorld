@@ -2,11 +2,14 @@
 html, body {
     margin: 0;
     height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
 #canvas {
     display: block;
+    height: 100%;
+    width: 100%;
 }
 
 #vignette {
@@ -131,4 +134,78 @@ html, body {
 .button-container button:hover {
     transform: scale(1.1);
     background-color: gainsboro;
+}
+
+.loading-screen {
+    position: fixed;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    height: 100vh;
+    width: 100vw;
+    background-color: #9ca3af;
+}
+
+#sprite {
+    transform: scale(0.9);
+    width: 170px;
+    height: 170px;
+    /* background-color: blueviolet; */
+    background-image: url('/assets/character_spritesheet_loading.png');
+    background-size: 512px 342px;
+    background-repeat: no-repeat;
+    animation: play 0.9s step-end infinite;
+    margin-bottom: 0%;
+}
+
+
+#percentage {
+    color: rgb(85, 85, 129);
+    font-weight: 600;
+    /* margin-left: 20px; */
+    padding-left: 24px;  
+}
+
+
+#loading-text {
+    padding-left: 12px;
+    font-size: 2.8rem;
+    font-family: 'Annie Use Your Telescope';
+    background-color: rgba(216, 220, 220, 0.687);
+    
+    /* border-radius: 1px; */
+    outline: 4px solid white;
+
+    font-weight: 500;
+    width:300px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin: 0px;
+}
+
+#dots::after {
+    content: '';
+    animation: dost_animation 1s step-end infinite;
+}
+
+@keyframes dost_animation{
+    0%  {content:'';}
+    25% {content:'.';}
+    50% {content:'..';}
+    75% {content:'...';}
+    100% {content:'';}    
+}
+
+
+
+@keyframes play {
+    0%      {background-position: 0 0;}
+    20%  {background-position: -170px 0;}
+    40%  {background-position: -340px 0;}
+    60%     {background-position: -0px -170px;}
+    80%  {background-position: -170px -170px;}
 }

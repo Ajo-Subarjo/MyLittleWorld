@@ -1,18 +1,23 @@
 import * as THREE from 'three/webgpu';
-import { array, pass, vec3 } from 'three/tsl';
+import { array, invocationLocalIndex, pass, uniform, vec3 } from 'three/tsl';
 // import { dof } from 'three/addons/tsl/display/DepthOfFieldNode.js';
 
 
 import { render } from 'solid-js/web';
 import ProjectScreen from './project_screen.jsx';
+import LoadingScreen from './loadingmanager.jsx';
 
 import { Player } from './player.js';
 import { StaticObject, InteractAbleObject } from './object.js'
 import { Physics } from './physics.js';
 import { PhysicsDebug } from './debug.js';
 import get_texture from './get_texture.js';
-import { assetsReady, hideLoadingScreen, showError } from './loadingmanager.js';
 import { AudioManager } from './audio.js';
+
+
+
+
+
 
 
 async function Main() {
@@ -30,12 +35,7 @@ async function Main() {
 
   const audiomanager = new AudioManager(audiolistener);
 
-
-  render(
-    () => <ProjectScreen audiomanager={audiomanager}/>,
-    document.getElementById('root')
-  )
-
+  render(() => <><LoadingScreen/><ProjectScreen audiomanager={audiomanager}/></>, document.getElementById('root'))
 
 
 
@@ -61,6 +61,17 @@ async function Main() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   // renderer.setClearColor(0x3b414d);
+
+  function onResize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    
+    renderer.setSize(width, height)
+  }
+
+  window.addEventListener('resize', onResize)
 
 
   renderPipeline.outputNode = colorNode;
@@ -239,8 +250,6 @@ async function Main() {
 
     Interact.push(serene,onebonker,cosmotrack,wrebos,rx_pad)
   }
-
-
 
   function grassandrock() {
     const grass_texture = get_texture('assets/ornament_leveled_light.png', true, 2);
@@ -921,8 +930,6 @@ async function Main() {
     );
 
   }
-
-
 }
 
 

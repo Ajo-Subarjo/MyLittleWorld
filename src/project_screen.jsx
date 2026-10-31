@@ -37,7 +37,7 @@ export default function ProjectScreen(props) {
                         <button className="visit-button" disabled={!projects[name()].demolink} onClick={() => {
                             playsound()
                             if (name() == 'OneBonker') {
-                                fetch('/onebonkeruri.txt')
+                                fetch('onebonkeruri.txt')
                                 .then(res => res.text())
                                 .then(text => navigator.clipboard.writeText(text))
                                 alert("You copied the Uri now paster in the browser address")

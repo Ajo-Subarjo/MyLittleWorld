@@ -1,7 +1,10 @@
 import * as THREE from 'three'
+import {loadingManager} from './loadingmanager.jsx'
+
+
 
 export default function get_texture(path, isSprite = false, frame = 0) {
-    const texture = new THREE.TextureLoader().load(path);
+    const texture = new THREE.TextureLoader(loadingManager).load(path);
     if (isSprite) {
         
         texture.wrapS = THREE.RepeatWrapping

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-
+import {loadingManager} from './loadingmanager.jsx'
 
 export class AudioManager {
     constructor (audiolistener) {
@@ -8,7 +8,7 @@ export class AudioManager {
         this.footstep_soundb = new THREE.Audio(audiolistener)
         this.bgm_sound = new THREE.Audio(audiolistener)
         this.ui_sound = new THREE.Audio(audiolistener)
-        this.audioloader = new THREE.AudioLoader();
+        this.audioloader = new THREE.AudioLoader(loadingManager);
 
 
         this.audioloader.load(
@@ -32,7 +32,7 @@ export class AudioManager {
                 this.bgm_sound.setBuffer(buffer);
                 this.bgm_sound.setLoop(true);
                 this.bgm_sound.setVolume(0.6);
-                this.bgm_sound.play(1)
+                this.bgm_sound.play()
             }
         );
 

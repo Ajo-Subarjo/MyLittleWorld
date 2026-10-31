@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { setProject } from './project_screen.jsx' 
+import {project, setProject } from './project_screen.jsx' 
 import get_texture from './get_texture.js';
 
 
@@ -195,6 +195,7 @@ export class Player {
 
         this.animationUpdate(correctedMovement ,delta);
         this.updateFootstepSound(correctedMovement ,delta);
+           
 
 
         if (this.keys.KeyE) {
@@ -216,11 +217,15 @@ export class Player {
                     setProject(null)
                     this.audiomanager.playUI()
                     this.keys.KeyE = false
-                    this.screen = false
                 }
             }
                    
         }
+
+        if (project() == null) {
+            this.screen = false
+        };
+           
     }
 }
 
